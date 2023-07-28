@@ -1,16 +1,16 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  darkMode: ["class"],
   content: [
-    './pages/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
-    './app/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}',
-	],
+    "./app/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./ui/**/*.{ts,tsx}",
+    "./content/**/*.{md,mdx}",
+  ],
+  darkMode: ["class"],
   theme: {
     container: {
       center: true,
-      padding: "2rem",
+      padding: "1.2rem",
       screens: {
         "2xl": "1400px",
       },
@@ -52,9 +52,13 @@ module.exports = {
         },
       },
       borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
+        lg: `var(--radius)`,
+        md: `calc(var(--radius) - 2px)`,
         sm: "calc(var(--radius) - 4px)",
+      },
+      fontFamily: {
+        inter: ["var(--font-inter)"],
+        cal: ["var(--font-cal)"],
       },
       keyframes: {
         "accordion-down": {
@@ -72,5 +76,5 @@ module.exports = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography"), require("@tailwindcss/line-clamp")],
+  plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
 }
