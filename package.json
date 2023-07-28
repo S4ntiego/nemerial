@@ -19,6 +19,7 @@
     "clsx": "^2.0.0",
     "concurrently": "^8.2.0",
     "contentlayer": "^0.3.4",
+    "date-fns": "^2.30.0",
     "lucide-react": "^0.263.1",
     "next": "13.4.12",
     "next-auth": "^4.22.3",
