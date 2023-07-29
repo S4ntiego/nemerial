@@ -8,7 +8,6 @@ import { MdxCallout } from "@/components/mdxCallout"
 import { MdxCard } from "@/components/mdxCard"
 
 import { MdxTerminal } from "./mdxTerminal"
-import { Pre } from "./pre"
 
 const mdxComponents = {
   h1: ({ className, ...props }) => (
@@ -133,11 +132,19 @@ const mdxComponents = {
       {...props}
     />
   ),
-  pre: Pre,
+  pre: ({ className, ...props }) => (
+    <pre
+      className={cn(
+        "",
+        className
+      )}
+      {...props}
+    />
+  ),
   code: ({ className, ...props }) => (
     <code
       className={cn(
-        "relative rounded border px-[0.3rem] py-[0.2rem] font-mono text-sm",
+        "",
         className
       )}
       {...props}

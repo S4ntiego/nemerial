@@ -4,6 +4,8 @@ import rehypePrettyCode from "rehype-pretty-code"
 import rehypeSlug from "rehype-slug"
 import remarkGfm from "remark-gfm"
 import { visit } from "unist-util-visit"
+import path from "path"
+import { getHighlighter, loadTheme } from "shiki"
 
 const computedFields = {
   //in case of content -> blog -> blog.mdx it will be /blog/blog, flattenedPath is the part after contentDirPath
@@ -81,6 +83,8 @@ export default makeSource({
   mdx: {
     remarkPlugins: [remarkGfm],
     rehypePlugins: [
+      rehypeSlug,
+
       () => (tree) => {
         visit(tree, (node) => {
           if (node?.type === "element" && node?.tagName === "pre") {
@@ -88,15 +92,28 @@ export default makeSource({
 
             if (!codeEl) return;
    
-            node.raw = codeEl.children?.[0].value;
+            if (codeEl.data?.meta) {
+              // Extract event from meta and pass it down the tree.
+              const regex = /event="([^"]*)"/
+              const match = codeEl.data?.meta.match(regex)
+              if (match) {
+                node.event = match ? match[1] : null
+                codeEl.data.meta = codeEl.data.meta.replace(regex, "")
+              }
+            }
+
+            node.raw = codeEl.children?.[0].value
+            node.src = node.properties?.src
+            node.style = node.properties?.style
           }
         });
       },
-      rehypeSlug,
+      
       [
         rehypePrettyCode,
         {
-          theme: "slack-dark",
+          theme: "one-dark-pro",
+          keepBackground: false,
           onVisitLine(node) {
             // Prevent lines from collapsing in `display: grid` mode, and allow empty
             // lines to be copy/pasted
@@ -119,10 +136,25 @@ export default makeSource({
               return
             }
 
-            for (const child of node.children) {
-              if (child.tagName === "pre") {
-                child.properties["raw"] = node.raw
-              }
+            const preElement = node.children.at(-1)
+            if (preElement.tagName !== "pre") {
+              return
+            }
+
+            preElement.properties["withMeta"] =
+              node.children.at(0).tagName === "div"
+            preElement.properties["raw"] = node.raw
+
+            if (node.src) {
+              preElement.properties["src"] = node.src
+            }
+
+            if (node.event) {
+              preElement.properties["event"] = node.event
+            }
+
+            if (node.style) {
+              preElement.properties["style"] = node.style
             }
           }
         })
